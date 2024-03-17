@@ -4,13 +4,12 @@ const cors = require('cors')
 const bodyParser = require('body-parser');
 const { dbconnect } = require('./controller/mongodbconnect')
 const login = require('./Route/Login/login')
-const place = require('./Route/Places/place')
-const manageAdd = require('./Route/ManageAdd/mangeAdd')
 const booknow = require('./Route/Booknow/booknow')
-const { registercontroll, servedata } = require('./controller/authcontroller');
-const { authMiddleware } = require('./controller/jwt');
+const user = require('./Route/User/user')
+const { registercontroll } = require('./controller/authcontroller');
+const HotelOperations  =require('./Route/ManageHotel/HotelOperations')
 const getDocuments = require('./controller/searchcontroller');
-const checkavailability = require('./controller/checkAvailability');
+
 
 const app = express();
 const PORT = 3001;
@@ -23,11 +22,10 @@ app.use(express.static('public'))
 
 //mongodb cnnection 
 dbconnect();
-app.post('/checkavailability',checkavailability)
 app.use('/login', login)
-app.use('/addplaces', place)
-app.use('/postadd', manageAdd)
+app.use('/hotel', HotelOperations)
 app.use('/booknow', booknow)
+app.use('/user', user)
 app.post('/signup', registercontroll)
 app.get('/search',getDocuments)
 // app.post('/getdata',authMiddleware,servedata)

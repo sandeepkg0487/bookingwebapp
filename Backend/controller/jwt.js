@@ -26,8 +26,8 @@ const authMiddleware = (req, res, next) => {
         const decoded = jwt.verify(token, secretKey);
         console.log('decoded:', decoded)
         if (decoded.userId) {
-            req.userId = decoded.userId
-            req.userName = decoded.username
+            req.jwt = decoded
+           
         }
         if (decoded.bookingId) {
             // req.userId = decoded.userId
@@ -46,7 +46,7 @@ const authMiddleware = (req, res, next) => {
 //   create JWT token
 
 function generateJWT(payload) {
-    console.log('start generating token');
+console.log("payload:",payload);
     // JWT payload containing user information
 
 

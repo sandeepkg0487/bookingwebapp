@@ -6,10 +6,10 @@ const { generateJWT } = require('./jwt');
 
 
 async function registercontroll(req, res, next) {
-
-    const { username, password, email } = req.body;
+    console.log("signup")
+    const { firstname, lastname, email, password, phone } = req.body;
     console.log('req.body:', req.body);
-    console.log(username, password);
+    console.log(email, password, firstname, lastname, phone);
 
     try {
         // finding email already exist making email id unique
@@ -23,11 +23,11 @@ async function registercontroll(req, res, next) {
         console.log(hashedPassword);
 
         // create usermodel data
-        const user = new usermodel({ username: username, password: hashedPassword, email: email })
+        const user = new usermodel({ firstname, lastname, email, password: hashedPassword, phone })
         await user.save();
         const payload = {
             userId: user._id,
-            username: user.email,
+            email: user.email,
         };
         const token = generateJWT(payload)
         console.log("token:", token);
@@ -44,18 +44,19 @@ async function registercontroll(req, res, next) {
 
 
     } catch (err) {
+        console.log(err.message);
         res.status(300).json({ err: err.message })
     }
 
 }
 
 const logincontroll = async (req, res, next) => {
-    const { username, password } = req.body;
-    console.log(password)
+    const { email, password } = req.body;
+    console.log(email, password)
     try {
 
         //FETCHING USER DATA FROM DB
-        const user = await usermodel.findOne({ username })
+        const user = await usermodel.findOne({ email })
         console.log("userfind for checking:", user);
 
         //USERNAME VALIDATION
@@ -83,7 +84,7 @@ const logincontroll = async (req, res, next) => {
         // generete tocken
         const payload = {
             userId: user._id,
-            username: user.email,
+            email: user.email,
         };
         const token = generateJWT(payload)
         console.log("token:", token);
@@ -104,12 +105,12 @@ const logincontroll = async (req, res, next) => {
 }
 
 const servedata = (req, res, next) => {
-    console.log(req.userId);
-    console.log(req.userName);
+    console.log(req.jwt.userId);
+    console.log(req.jwt.userName);
     res.status(200).json({ status: 'sucess', meaasage: 'fake msg' })
 }
 
-// jwt verification
+
 
 
 

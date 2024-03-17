@@ -3,11 +3,15 @@ const bcrypt = require('bcrypt');
 
 
 const userschema = new Schema({
-
-    username: {
+    firstname: {
         type: String,
         required: true
     },
+    lastname: {
+        type: String,
+        required: true
+    },
+
     password: {
         type: String,
         required: true
@@ -20,32 +24,31 @@ const userschema = new Schema({
     created_on: {
         type: Date,
         default: Date.now
-    }
+    },
+    phone: {
+        type: String,
+        require: true
+    },
+    bookings: [String]
 
 })
 const usermodel = model('Login123', userschema);
 
 
-
-
-const addplaces = new Schema({
+const hotelSchema = new Schema({
     userName: {
         type: String,
         required: true,
     },
-    userId: {
+    password: {
         type: String,
         required: true
     },
-    placeName: {
+    hotelName: {
         type: String,
         required: true,
     },
     location: {
-        type: String,
-        required: true,
-    },
-    noOfSlots: {
         type: String,
         required: true,
     },
@@ -69,42 +72,95 @@ const addplaces = new Schema({
             required: true
         },
     }],
-    totalAmount:{
-        required:true,
-        type:Number
-    }
+
 
 })
-const placeModel = model('places', addplaces)
+const hotel = model('hotels', hotelSchema)
 
+const roomSchema = new Schema({
+    hotelid: {
+        type: String,
+        required: true
+    },
+    roomType: {
+        type: String
+    },
+    numberOfRooms: {
+        type: Number
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    capacity: {
+        type: Number,
+        required: true
+    },
+    roomStructure: [{
+        roomNumber: {
+            type: Number,
+        },
+       
+
+        booking:[{
+            start:Date,
+            end:Date,
+            userId:String,
+            name:String,
+            phone:Number,
+        }]
+    }],
+    extras: [
+        String,
+    ],
+    images: [{
+
+        cloudinary_id: {
+            type: String,
+            required: true
+        },
+
+        RoomImage: {
+            type: String,
+            
+        },
+    }],
+
+
+})
+const rooms = model('room', roomSchema);
 
 
 const bookingschema = new Schema({
-    userId:{
-        required:true,
-        type:String
+    userId: {
+        required: true,
+        type: String
     },
-    placeId:{
-        required:true,
-        type:String
+    hotelId: {
+        required: true,
+        type: String
     },
-    startFrom:{
-        required:true,
-        type:Date
+    startFrom: {
+        required: true,
+        type: Date
     },
-    endsOn:{
-        required:true,
-        type:Date
+    endsOn: {
+        required: true,
+        type: Date
     },
-    quantity:{
-        required:true,
-        type:Number
+    numberOfRoom: {
+        required: true,
+        type: Number
     },
-    amountTobePayed:{
-        required:true,
-        type:Number
-    }
+    amountTobePayed: {
+        
+        type: Number
+    },
+    created_on: {
+        type: Date,
+        default: Date.now
+    },
 })
-const bookingModel = model('booking',bookingschema)
+const bookingModel = model('booking', bookingschema)
 
-module.exports = { usermodel, placeModel,bookingModel }
+module.exports = { usermodel, hotel, bookingModel, rooms }

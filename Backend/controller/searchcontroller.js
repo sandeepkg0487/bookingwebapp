@@ -1,26 +1,28 @@
-const { placeModel } = require("../Model/userschema");
+const {  hotel } = require("../Model/userschema");
 
 const pageSize = 10;
 
 
-
-async function getDocuments(req,res) {
-const {searchparam, pagenumber=1} = req.body
-console.log(pagenumber)
-    try {
-        const totalPosts = await placeModel.countDocuments().exec();
+ //search from homepage 
+async function getDocuments(req, res) {
+    console.log('HITTING');
+    const { searchparam = '', pagenumber = 1 } = req ?.body
+  console.log(searchparam,pagenumber);
    
-        if((pageSize*(pagenumber-1))>totalPosts){
-           return  res.send('result exceeded');
+    try {
+        const totalPosts = await hotel.countDocuments().exec();
+
+        if ((pageSize * (pagenumber - 1)) > totalPosts) {
+            return res.send('result exceeded');
         }
-    const documents = await placeModel.find({$or:[{'placeName':{'$regex': searchparam}},{'location':{'$regex': searchparam}} ]})
+        const documents = await hotel.find({ $or: [{ 'hotelName': { '$regex': searchparam } }, { 'location': { '$regex': searchparam } }] })
             .skip((pagenumber - 1) * pageSize)
             .limit(pageSize)
             .exec();
-        
+
         // Handle retrieved documents
-        console.log(documents);
-        res.send('success');
+      //  console.log(documents);
+        res.status(200).json(documents)
     } catch (error) {
         // Handle error
         console.error(error);
@@ -29,4 +31,4 @@ console.log(pagenumber)
 }
 
 
-module.exports=getDocuments
+module.exports = getDocuments
