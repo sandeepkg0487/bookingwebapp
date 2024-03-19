@@ -38,7 +38,7 @@ console.log("email, password",email, password)
 
     // signup function
     const signup = async (firstname, lastname, email, password,phone) => {
-        console.log("data receive from signpu",firstname, lastname.email, password);
+        console.log("data receive from signpu",firstname, lastname,email, password,phone);
         try {
             const response = await api.post('/signup', {
                 firstname: firstname,

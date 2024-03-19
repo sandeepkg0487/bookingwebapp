@@ -1084,6 +1084,10 @@ input:checked + .toggle-bg {
   position: relative;
 }
 
+.sticky {
+  position: sticky;
+}
+
 .inset-y-0 {
   top: 0px;
   bottom: 0px;
@@ -5939,6 +5943,10 @@ input:checked + .toggle-bg {
     max-width: 56rem;
   }
 
+  .sm\:flex-1 {
+    flex: 1 1 0%;
+  }
+
   .sm\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -6044,10 +6052,6 @@ input:checked + .toggle-bg {
 
   .md\:max-w-xl {
     max-width: 36rem;
-  }
-
-  .md\:flex-1 {
-    flex: 1 1 0%;
   }
 
   .md\:grid-cols-4 {
