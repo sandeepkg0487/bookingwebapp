@@ -1,22 +1,24 @@
-import { Card } from 'flowbite-react'
+
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 const HomeCard = ({item}) => {
-  console.log('item from homecard component:',item);
+
+ 
   return (
 
     <>
 
-      <div class="max-w-sm rounded overflow-hidden shadow-lg">
-        <img class="w-full" src="/hotel.jpg" alt="Sunset in the mountains" />
-        <div class="px-6 py-4">
-          <div class="font-bold text-xl mb-2">Place to stay</div>
+      <div key={item.id} className="max-w-sm rounded overflow-hidden shadow-lg">
+      {/* item.images[0].profile_img */}
+        <img className="w-full" src={'replace'} alt="Sunset in the mountains" />
+        <div className="px-6 py-4">
+          <div className="font-bold text-xl mb-2">{item.hotelName}</div>
 
           <div className="flex items-center ">
             <img className='object-cover h-full' src="./location.png" alt="icon" />
-            <p class="text-gray-700 text-base">
-              location
+            <p className="text-gray-700 text-base">
+              {item.location}
             </p>
           </div>
 
