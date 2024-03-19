@@ -5,8 +5,9 @@ const pageSize = 10;
 
  //search from homepage 
 async function getDocuments(req, res) {
-    console.log('HITTING');
-    const { searchparam = '', pagenumber = 1 } = req ?.body
+    console.log('HITTING search');
+    const { searchparam = '', pagenumber = 1 } = req?.query
+
   console.log(searchparam,pagenumber);
    
     try {

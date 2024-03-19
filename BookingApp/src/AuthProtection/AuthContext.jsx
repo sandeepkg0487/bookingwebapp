@@ -16,7 +16,7 @@ export const AuthContextprovider = ({ children }) => {
 
     // login fn
     const login = async (email, password) => {
-
+console.log("email, password",email, password)
         try {
             const response = await api.post('/login', {
                 email: email,

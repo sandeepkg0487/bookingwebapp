@@ -1,7 +1,7 @@
 
-import { Button, FileInput, Label, TextInput, Textarea } from 'flowbite-react';
 import React from 'react'
 import Placeupload from './Placeupload';
+import { TextInput } from 'flowbite-react';
 
 
 const Addplaces = () => {
