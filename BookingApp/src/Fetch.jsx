@@ -6,23 +6,23 @@ function DataFetcher(WrappedComponent, url) {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    //  console.log("props",props);
+
     let param = {
-      "searchparam":"",
-      "pagenumber":1
+      "searchparam": "",
+      "pagenumber": 1
     }
-    if(props.searchParam){
+    if (props.searchParam) {
       param = {
-        searchparam:'atlas',
-        pagenumber:1
+        searchparam: 'atlas',
+        pagenumber: 1
       }
-  
+
     }
-    // console.log(param);
+
     useEffect(() => {
-      // console.log(props);
+
       const fetchData = async () => {
-        console.log("inside",props.searchParam)
+
         try {
           const response = await axios.get(url,
             {
@@ -31,8 +31,9 @@ function DataFetcher(WrappedComponent, url) {
                 pagenumber: 1
               }
             }
-            );
-          // console.log(response.data);
+          );
+          
+
           setData(response.data);
         } catch (error) {
           setError(error);
@@ -42,7 +43,7 @@ function DataFetcher(WrappedComponent, url) {
       };
 
       fetchData();
-    }, [url,props.searchParam]);
+    }, [url, props.searchParam]);
 
     if (isLoading) {
       return <div>Loading...</div>;
@@ -51,8 +52,11 @@ function DataFetcher(WrappedComponent, url) {
     if (error) {
       return <div>Error: {error.message}</div>;
     }
-
-    return <WrappedComponent  data={data} />;
+    if(data.data =='faild'){
+      return <div>somting went wrong</div>
+    }
+   
+    return <WrappedComponent data={data} />;
   };
 }
- export default DataFetcher;
+export default DataFetcher;

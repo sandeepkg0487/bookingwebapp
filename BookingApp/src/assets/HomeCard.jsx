@@ -1,18 +1,34 @@
 
 import React from 'react'
-import { Link } from 'react-router-dom'
+import {  Link, useNavigate } from 'react-router-dom'
+import { useData } from '../Context/Context';
 
 const HomeCard = ({item}) => {
+  const { setPageData ,getPageData} = useData()
+  
+const navigate = useNavigate()
+//   const buttonEvenet = () => { 
+//    console.log( item._id);
+//    const data = {
+//     item_id:item._id
+//    }
+//   //console.log(JSON.parse(JSON.stringify(data)));
+//    setPageData('Hotel',JSON.parse(JSON.stringify(data)))
+//   // console.log(getPageData('Hotel')) 
+//    navigate('/hotel')
 
+
+  
+//  }
  
   return (
 
     <>
 
-      <div key={item.id} className="max-w-sm rounded overflow-hidden shadow-lg">
+      <div key={item._id} className="max-w-sm rounded overflow-hidden shadow-lg">
       {/* item.images[0].profile_img */}
         <img className="w-full" src={'replace'} alt="Sunset in the mountains" />
-        <div className="px-6 py-4">
+        <div  className="px-6 py-4">
           <div className="font-bold text-xl mb-2">{item.hotelName}</div>
 
           <div className="flex items-center ">
@@ -20,7 +36,7 @@ const HomeCard = ({item}) => {
             <p className="text-gray-700 text-base">
               {item.location}
             </p>
-          </div>
+          </div>  
 
           <div className=" my-2.5 flex items-center">
             <svg
@@ -70,7 +86,8 @@ const HomeCard = ({item}) => {
           </div>
           <div className="flex items-center justify-between">
             <Link
-             to={'/Place'}
+            // onClick={buttonEvenet}
+             to={`/Hotel/${item._id}`}
               className="rounded-lg bg-cyan-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-800 focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
             >
               Book Now

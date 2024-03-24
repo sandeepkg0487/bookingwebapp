@@ -8,13 +8,10 @@ const Home = () => {
   const [searchstr, setSearchstr] = useState()
   const { data, handleFormSubmit, inputEventHandler } = useDataCollection()
 
-  useEffect(() => {
-    console.log('search',searchstr);
-  }, [data,searchstr])
+
 
   const updateSearchData = () => {
-    console.log('click');
-    setSearchstr((prev)=>data.search)
+     setSearchstr((prev)=>data.search)
   };
   return (
     <>

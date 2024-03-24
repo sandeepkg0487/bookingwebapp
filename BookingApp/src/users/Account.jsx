@@ -13,7 +13,7 @@ const Account = () => {
 
   const bookingToogle = (e) => {
     setToggle(e.target.value)
-    console.log(toggle);
+  
   }
   return (
     <>

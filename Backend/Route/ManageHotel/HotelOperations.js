@@ -16,13 +16,18 @@ const upload = Multer({
 // hotel signup >>>>>>
 Route.post("/signup", upload.single("my_file"), async (req, res) => {
   try {
+
     console.log('hitting on upload file');
+
+    const imageName = req?.file
+
+
     const b64 = Buffer.from(req.file.buffer).toString("base64");
     let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
     const cldRes = await handleUpload(dataURI);
 
     const { userName, password, hotelName, location, discription } = req.body
-    console.log(location, discription,);
+    console.log(userName, password, hotelName, location, discription);
 
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
@@ -43,7 +48,7 @@ Route.post("/signup", upload.single("my_file"), async (req, res) => {
     await makeAdd.save();
     const payload = {
       userName,
-      userid: hotelUser._id,
+      userid: makeAdd._id,
       mode: 'Hotel'
     }
     const token = generateJWT(payload)
@@ -59,12 +64,12 @@ Route.post("/signup", upload.single("my_file"), async (req, res) => {
 });
 
 
-// hotel login
+// hotel login>>>>>>>>>>>>>>>>>
 Route.post("/login", async (req, res) => {
 
 
   const { userName, password } = req.body
-  console.log('email and paswird:', userName, password)
+  console.log('email and pasword:', userName, password)
   try {
 
     //FETCHING USER DATA FROM DB
@@ -112,15 +117,20 @@ Route.post("/login", async (req, res) => {
 });
 
 
-// Add room >>>>
-Route.post("/addRoom", upload.single("my_file"), async (req, res) => {
+// Add room >>>>>>>>>>>>>
+Route.post("/addRoom", authMiddleware, upload.single("my_file"), async (req, res) => {
+
+  console.log('moderator status line 123', req?.jwt?.isModerator)
+  if (!req?.jwt?.isModerator) {
+    res.status(401).json({ message: 'invalid user' })
+  }
   try {
     console.log('hitting on addRoom ');
     const b64 = Buffer.from(req.file.buffer).toString("base64");
     let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
     const cldRes = await handleUpload(dataURI);
-
-    const { hotelid, roomType, numberOfRooms, price, capacity, extras } = req.body
+    const hotelid = req.jwt.userId
+    const { roomType, numberOfRooms, price, capacity, extras } = req.body
     console.log(hotelid, roomType, numberOfRooms, price, capacity, extras);
 
 
@@ -151,13 +161,13 @@ Route.post("/addRoom", upload.single("my_file"), async (req, res) => {
       images: [{
 
         cloudinary_id: cldRes.public_id,
-        profile_img: cldRes.url
+        RoomImage: cldRes.url
 
       }]
 
     })
     await makeAdd.save();
-
+    console.log('room added successfuly')
 
     res.status(201).json({ status: "success" });
   } catch (error) {
@@ -168,7 +178,7 @@ Route.post("/addRoom", upload.single("my_file"), async (req, res) => {
   }
 });
 
-// for get user  booking details
+// view user  booking details for hotels 
 Route.get("/getBooking", authMiddleware, async (req, res) => {
 
   const isModerator = req?.jwt?.isModerator || false;
@@ -181,9 +191,9 @@ Route.get("/getBooking", authMiddleware, async (req, res) => {
       if (result) {
         return res.status(200).json({ message: "success", data: result })
       }
-      return res.status(200).json({ message: "no data to fetch",data :result })
+      return res.status(404).json({ message: "no data to fetch", data: result })
     } catch (error) {
-      return res.status(5000).json({ message: "faild to fetch data ", })
+      return res.status(500).json({ message: "faild to fetch data ", })
     }
 
   }

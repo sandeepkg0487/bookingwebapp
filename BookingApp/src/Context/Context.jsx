@@ -6,15 +6,33 @@ const DataContext = createContext();
 
 // Step 2: Create a provider
 export const DataProvider = ({ children }) => {
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [pageProp, setPageProp] = useState({})
+
+
+  // set each page data on context 
+  const setPageData = (pageName, data) => {
+
+    setPageProp(prevPageData => ({
+      ...prevPageData,
+      [pageName]: data
+    }));
+
+
+  }
+
+  // gives requested page data
+  const getPageData  = (pageName) => {
+        return pageProp[pageName] || null;
+      };
+
+
+
 
 
   // You can have any other state or functions related to data management here
 
   return (
-    <DataContext.Provider value={{ data, setData ,isLoading, setIsLoading, error, setError }}>
+    <DataContext.Provider value={{ setPageData, getPageData }}>
       {children}
     </DataContext.Provider>
   );

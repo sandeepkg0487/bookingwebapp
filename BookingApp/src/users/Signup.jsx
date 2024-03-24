@@ -17,7 +17,7 @@ const Signup = () => {
   const { signup } = useAuth()
   
 const handleSignup = () => { 
-  console.log(data);
+
   signup(data.firstname, data.lastname, data.email, data.password, phoneNumber)
 
  }

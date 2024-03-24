@@ -11,12 +11,12 @@ export const AuthContextprovider = ({ children }) => {
     // const [ isAuth,setIsAuth ] = useState(false);
     const [cookies, setCookies, removeCookie] = useCookies()
 
-    console.log('to check weather working');
+  
 
 
     // login fn
     const login = async (email, password) => {
-console.log("email, password",email, password)
+
         try {
             const response = await api.post('/login', {
                 email: email,
@@ -38,7 +38,7 @@ console.log("email, password",email, password)
 
     // signup function
     const signup = async (firstname, lastname, email, password,phone) => {
-        console.log("data receive from signpu",firstname, lastname,email, password,phone);
+    
         try {
             const response = await api.post('/signup', {
                 firstname: firstname,
@@ -63,7 +63,7 @@ console.log("email, password",email, password)
 
     const logout = () => {
         removeCookie('token')
-        navigate('/login')
+        // navigate('/login')
     }
 
     const value = useMemo(

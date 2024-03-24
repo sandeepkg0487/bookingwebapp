@@ -2,7 +2,8 @@ import React from 'react'
 
 const Searchbar = ({propdata}) => {
 
-// console.log(propdata);
+
+    const today = new Date().toISOString().split('T')[0];
 
     return (
         <section className="mt-1">
@@ -36,7 +37,11 @@ const Searchbar = ({propdata}) => {
                                         </div>
 
                                         <div className="flex-1">
-                                            <input  onChange={(e)=>propdata.inputEventHandler(e)} type="date"  name="startDate" className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
+                                            <input 
+                                             onChange={(e)=>propdata.inputEventHandler(e)} 
+                                             min={today}
+                                             defaultValue={today}
+                                             type="date"  name="startDate" className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
 
                                         </div>
 

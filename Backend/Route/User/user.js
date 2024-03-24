@@ -6,6 +6,7 @@ const Route = express()
 
 // to show user bookings 
 Route.get('/getBooking', authMiddleware, async (req, res) => {
+  console.log('req.path',req.path);
     const userId = req.jwt.userId
     try {
         const result = await bookingModel.find({ userId: userId })
