@@ -29,16 +29,17 @@ Route.get("/getRoom/:id", async (req, res) => {
 // findRoom by user >>>>> make api for enter single hotel page
 Route.post("/findRoom", async (req, res) => {
 
-
-    const from_date = new Date('2024-03-18')
-    const to_date = new Date(new Date('2024-03-21'))
-    console.log(from_date);
-    const objectId = new ObjectId("66004471cf8d93c22d16cc0b");
+    const { from_date, to_date, objectId } = req.body
+    console.log(from_date, to_date, objectId);
+    // const from_date = new Date('2024-03-18')
+    // const to_date = new Date(new Date('2024-03-21'))
+    // console.log(from_date);
+    // const objectId = new ObjectId("66004471cf8d93c22d16cc0b");
     try {
         const getrooms = await rooms.aggregate([
             {
                 $match: {
-                    hotelid: '66004471cf8d93c22d16cc0b' 
+                    hotelid: objectId
                 }
             },
 
@@ -64,15 +65,23 @@ Route.post("/findRoom", async (req, res) => {
                 $project: {
                     hotelid: 1,
                     roomType: 1,
+                    price: 1,
+                    capacity: 1,
+                    extras: 1,
+                    images: 1,
                     roomNumber: "$roomStructure.roomNumber",
                     booking: "$roomStructure.booking"
                 }
-            }, 
+            },
             {
                 $group:
                 {
-                    _id: { roomType: "$roomType" ,roomid:"$_id"  },
-                    avilableRoom: { $push: "$roomNumber" }
+                    _id: { roomType: "$roomType", roomid: "$_id" },
+                    avilableRoom: { $push: "$roomNumber" },
+                    price: { $first: "$price" },
+                    capacity: { $first: "$capacity" },
+                    extras: { $first: "$extras" },
+                    images: { $first: "$images" },
                 }
             }
 
@@ -93,7 +102,7 @@ Route.post('/book-room', async (req, res) => {
     try {
         const { hotelId, roomNumber, start, end, numberOfRoom } = req.body; // Assuming you're passing hotelId, roomNumber, start, and end in the request body
         const userId = req.jwt.userId
-       
+
         console.log(userId);
         console.log(hotelId, roomNumber, start, end);
         const user = await usermodel.findOne({ _id: userId });
@@ -131,6 +140,39 @@ Route.post('/book-room', async (req, res) => {
 
 
         res.json({ message: 'Availability added successfully', user });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+Route.post('/getPrice', async (req, res) => {
+    try {
+        const { roomId, noOfRomm, start_date, end_date } = req.body; // Assuming you're passing hotelId, roomNumber, start, and end in the request body
+        //const userId = req.jwt.userId
+        console.log( roomId, noOfRomm, start_date, end_date);
+
+        let date1 = new Date(start_date);
+        let date2 = new Date(end_date);
+
+        let Difference_In_Time =
+            date2.getTime() - date1.getTime();
+
+        let Difference_In_Days =
+            Math.round
+                (Difference_In_Time / (1000 * 3600 * 24));
+
+   
+        const singleRoom = await rooms.findOne({ _id: roomId });
+        if (!singleRoom) {
+            return res.send("somting went wrong")
+        }
+        const price = singleRoom.price
+        const total = price * noOfRomm * Difference_In_Days
+        console.log(total)
+
+        res.status(200).json({ status: "success", price: price, noOfRomm: noOfRomm, noOfDay: Difference_In_Days, start_date: date1, end_date: end_date, });
 
     } catch (error) {
         console.error(error);

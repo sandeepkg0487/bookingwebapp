@@ -1,9 +1,12 @@
 import React from 'react'
+import { useData } from '../Context/Context';
 
-const Searchbar = ({propdata}) => {
+const Searchbar = ({ propdata }) => {
 
 
     const today = new Date().toISOString().split('T')[0];
+
+    const { setSearchparam ,tomorrowString, } = useData()
 
     return (
         <section className="mt-1">
@@ -21,9 +24,9 @@ const Searchbar = ({propdata}) => {
                             </div>
 
                             <div className="mb-10">
-                                <form onSubmit={(e)=>propdata.handleFormSubmit(e)} >
+                                <form onSubmit={propdata.updateSearchData}  >
                                     <div className="flex flex-col sm:flex-row ">
-                                       
+
                                         <div className="relative flex-1" >
                                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                 <svg className="w-4 h-4 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -33,25 +36,31 @@ const Searchbar = ({propdata}) => {
                                                     </path>
                                                 </svg>
                                             </div>
-                                            <input  onChange={(e)=>propdata.inputEventHandler(e)} type="text" name="search" placeholder="Search here for threads" className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
+                                            <input onChange={setSearchparam} type="text" name="searchInput" placeholder="Search here for threads" required className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
                                         </div>
 
                                         <div className="flex-1">
-                                            <input 
-                                             onChange={(e)=>propdata.inputEventHandler(e)} 
-                                             min={today}
-                                             defaultValue={today}
-                                             type="date"  name="startDate" className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
-
-                                        </div>
-
-                                        <div  className="flex-1">
-                                            <input onChange={(e)=>propdata.inputEventHandler(e)} type="date"  name="endDate" className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
+                                            <input
+                                                onChange={setSearchparam}
+                                                min={today}
+                                                defaultValue={today}
+                                                required
+                                                type="date" name="startDate" className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
 
                                         </div>
 
                                         <div className="flex-1">
-                                            <button onClick={propdata.updateSearchData}  className="w-full bg-blue-700 hover:bg-blue-500 text-white font-bold p-4 pl-10 border-gray-100 rounded focus:outline-none focus:shadow-outline">
+                                            <input
+                                                                                                                         
+                                                min={tomorrowString}
+                                                defaultValue={tomorrowString}
+                                                onChange={setSearchparam}
+                                                type="date" name="endDate" required className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
+
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <button type='submit' className="w-full bg-blue-700 hover:bg-blue-500 text-white font-bold p-4 pl-10 border-gray-100 rounded focus:outline-none focus:shadow-outline">
                                                 Search
                                             </button>
                                         </div>

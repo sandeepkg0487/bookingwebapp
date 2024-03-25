@@ -4,7 +4,7 @@ import {  Link, useNavigate } from 'react-router-dom'
 import { useData } from '../Context/Context';
 
 const HomeCard = ({item}) => {
-  const { setPageData ,getPageData} = useData()
+
   
 const navigate = useNavigate()
 //   const buttonEvenet = () => { 

@@ -1,9 +1,57 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
+import { useParams } from 'react-router';
+import { useData } from '../Context/Context';
+import api from '../Services/api';
+
 
 const Reservation = () => {
+
+
+
+    const { Rid, hid, noOfRoom } = useParams()
+    console.log("Rid ,hid ,noOfRoom", Rid, hid, noOfRoom);
+    const { search } = useData()
+    console.log(Rid);
+    const [slip, setSlip] = useState()
+
+  
+    
+
+    const fetch = async () => {
+        try {
+            const response = await api.post('/booknow/getPrice', {
+                roomId: Rid,
+                noOfRomm: noOfRoom,
+                start_date: search.startDate,
+                end_date: search.endDate
+
+            })
+            setSlip(response.data)
+            console.log(data);
+        } catch (error) {
+            console.log(error.message);
+        }
+
+
+    }
+
+
+    useEffect(() => {
+
+        fetch()
+        return () => {
+
+        }
+    }, [])
+
+
+
     return (
 
         <>
+
+
             <div className="pt-8 max-w-6xl mx-auto w-full px-2 sm:px-4 md:px-8 flex content-start justify-center flex-col sm:flex-row">
                 <div className="p-2  flex-1  ">
                     <h1 className='text-4xl'>BILLING DETAILS</h1>
@@ -17,6 +65,7 @@ const Reservation = () => {
                             <input id='Last_Name' className='w-full mr-2' type="text" />
 
                         </div>
+
                         <div className='flex-1 w-1/2 ' >
                             <label htmlFor="Last_Name " className='mb-4  ml-2' > Last Name *</label>
                             <input className='w-full ml-2' type="text" />
@@ -65,8 +114,9 @@ const Reservation = () => {
                             </div>
                             <div className="flex justify-between items-center w-full">
                                 <p className="text-base dark:text-white font-semibold leading-4 text-gray-800">Total</p>
-                                <p className="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">$36.00</p>
+                                <p className="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">₹ {slip?.price}</p>
                             </div>
+
                         </div>
 
                     </div>

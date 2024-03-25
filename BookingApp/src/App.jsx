@@ -54,7 +54,7 @@ function App() {
                 
                 <Route path="/" element={<Home />}></Route>
                 <Route path="/Hotel/:hid" element={<HotelHome />}></Route>
-                <Route path="/Hotel/Reservation/:Rid" element={<Reservation />}></Route>
+                <Route path="/Hotel/:hid/Reservation/:Rid/:noOfRoom" element={<Reservation />}></Route>
                 <Route path="/**" element={<Home />}></Route>
 
 

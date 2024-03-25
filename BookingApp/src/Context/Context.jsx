@@ -1,29 +1,54 @@
-// DataContext.js
+
 import React, { createContext, useState, useContext } from 'react';
 
-// Step 1: Create a context
+
 const DataContext = createContext();
 
-// Step 2: Create a provider
+
 export const DataProvider = ({ children }) => {
-  const [pageProp, setPageProp] = useState({})
+
+  const today = new Date().toISOString().split('T')[0]; //set default date today
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1); // Increment the date by 1 to get tomorrow's date
+  const tomorrowString = tomorrow.toISOString().split('T')[0];
 
 
-  // set each page data on context 
-  const setPageData = (pageName, data) => {
 
-    setPageProp(prevPageData => ({
+  const [search, setSearch] = useState({ startDate: today, endDate: tomorrowString })
+  const [apidata, setApidata] = useState([])
+
+
+
+
+  // set search location date  data on context 
+  const setSearchparam = (e) => {
+    const { value, name } = e.target
+    setSearch(prevPageData => ({
       ...prevPageData,
-      [pageName]: data
+      [name]: value
     }));
 
 
   }
 
+  const getApidataByRoomId = (roomId) => {
+   
+    const result = apidata?.find(item => {
+   
+      return item._id.avilableRoom === roomId});
+
+    if (result) {
+      return result
+    } else {
+     return null
+    }
+
+  }
+
   // gives requested page data
-  const getPageData  = (pageName) => {
-        return pageProp[pageName] || null;
-      };
+  // const getPageData = (pageName) => {
+  //   return pageProp[pageName] || null;
+  // };
 
 
 
@@ -32,7 +57,7 @@ export const DataProvider = ({ children }) => {
   // You can have any other state or functions related to data management here
 
   return (
-    <DataContext.Provider value={{ setPageData, getPageData }}>
+    <DataContext.Provider value={{ setSearchparam, search, today, tomorrowString, setApidata ,getApidataByRoomId}}>
       {children}
     </DataContext.Provider>
   );

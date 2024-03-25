@@ -4,43 +4,67 @@ import { useData } from '../Context/Context'
 import api from '../Services/api'
 import { useParams } from 'react-router'
 import Searchbar from '../assets/Searchbar'
+import useDataCollection from '../Hooks/useDataCollection'
 
 const HotelHome = () => {
 
-    // const {getPageData} = useData()
+
     const [RoomsofHotel, setRoomsofHotel] = useState([])
-
+    const [searchstr, setSearchstr] = useState()
+    const { data, handleFormSubmit, inputEventHandler } = useDataCollection()
     const { hid } = useParams()
-    // const { getPageData } = useData()
-console.log(hid);
+    const { search ,setApidata } = useData()
 
-    const fetchData = async () => {
-        try {
-            
-            const response = await api.get(`booknow/getRoom/${hid}`
-            );
-            setRoomsofHotel(response.data);
-            // Logging the response data after setting the state
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
+
+    const updateSearchData = () => {
+        setSearchstr((prev) => data.search)
     };
 
 
+    const [data1, setData1] = useState([]);
+    const [data2, setData2] = useState([]);
+
+
+    const fetchData = async () => {
+        try {
+
+            const [response1, response2] = await Promise.all([
+                api.get(`booknow/getRoom/${hid}`),
+                api.post('/booknow/findRoom', {
+                    from_date: search.startDate,
+                    to_date: search.endDate,
+                    objectId:hid,
+                })
+            ]);
+
+
+            setData1(response1.data);
+            setData2(response2.data);
+            setApidata(response2.data)
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
     useEffect(() => {
 
-        fetchData()
 
-        console.log(RoomsofHotel);
 
-        // console.log(getPageData('Hotel'));
-        // const data = getPageData('Hotel')
-        // console.log(data,"data");
-    }, [])
+        fetchData();
+    }, []);
+    useEffect(() => {
+        console.log('data1:', data1);
+        console.log('data2:', data2);
+    }, [data1, data2])
+
 
     return (
         <div>
-            <Searchbar/>
+            <Searchbar
+                propdata={{ updateSearchData, data, handleFormSubmit, inputEventHandler }}
+
+            />
             <div className="bg-gray-100 dark:bg-gray-800 py-8 ">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row -mx-4">
@@ -109,38 +133,17 @@ console.log(hid);
                                             <p className='text-start pl-2'> Free WiFi  </p>
                                         </div>
 
-
-
-
-
-
                                     </div>
-
-
-
 
                                 </div>
 
                             </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
                         </div>
                     </div>
                     {
-                        RoomsofHotel.map(data => (
-                            <RoomCard key={data.id} data={data} />
+                        data2.map((data, index) => (
+                            <RoomCard key={index} data={data} />
                         ))
                     }
 
