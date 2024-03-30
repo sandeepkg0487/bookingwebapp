@@ -9,7 +9,8 @@ export const AuthContextprovider = ({ children }) => {
 
     const navigate = useNavigate()
     // const [ isAuth,setIsAuth ] = useState(false);
-    const [cookies, setCookies, removeCookie] = useCookies()
+    const [cookies, setCookies, removeCookie] = useCookies(['accessToken','refreshToken','isAuth','role'])
+   
 
   
 
@@ -23,8 +24,12 @@ export const AuthContextprovider = ({ children }) => {
                 password: password
             })
 
-            setCookies('token', response.data.token);
+            setCookies('accessToken', response.data.accessToken);
+            setCookies('refreshToken', response.data.refreshToken);
             setCookies('isAuth', true);
+            setCookies('role', "user");
+            sessionStorage.setItem('username', response.data.email);
+            
 
             return true
 
@@ -48,8 +53,11 @@ export const AuthContextprovider = ({ children }) => {
                 phone:phone,
             })
             console.log("response", response.data);
-            setCookies('token', response.data.token);
+            setCookies('accessToken', response.data.accessToken);
+            setCookies('refreshToken', response.data.refreshToken);
             setCookies('isAuth', true);
+            setCookies('role', "user");
+            sessionStorage.setItem('username', response.data.email);
 
             return true
 
@@ -62,8 +70,9 @@ export const AuthContextprovider = ({ children }) => {
     // logutfunction
 
     const logout = () => {
-        removeCookie('token')
+        removeCookie('accessToken')
         removeCookie('isAuth')
+        removeCookie('role');
         // removeCookie('')
         // navigate('/login')
     }
@@ -74,6 +83,7 @@ export const AuthContextprovider = ({ children }) => {
             login,
             logout,
             signup,
+            
 
         }), [cookies]
     )

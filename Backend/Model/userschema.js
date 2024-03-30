@@ -112,6 +112,7 @@ const roomSchema = new Schema({
             userId:String,
             name:String,
             phone:Number,
+            orderNote:String,
         }]
     }],
     extras: [

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useData } from '../Context/Context';
 import api from '../Services/api';
 import useDataCollection from '../Hooks/useDataCollection';
 import { useAuth } from '../AuthProtection/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useProtectedFetch from '../Services/AxiosBuilder';
 
 
 const Reservation = () => {
@@ -21,9 +22,9 @@ const Reservation = () => {
     const { cookies } = useAuth()
 
 
+    const fetchProtectedData = useProtectedFetch()
 
-
-
+    const navigate = useNavigate()
 
 
 
@@ -46,37 +47,40 @@ const Reservation = () => {
     }
 
     const reserveNow = async () => {
+       
+
         try {
-            const resp = await api.post('/booknow/book-room', {
+            const resp = await fetchProtectedData('/booknow/book-room', 'POST', {
                 formdata: data,
                 roomId: Rid,
-                hotelId:hid,
+                hotelId: hid,
                 numberOfRooms: count,
                 start_date: dates.startDate,
                 end_date: dates.endDate,
                 total: slip.total
 
-            },
-                {
-                    headers: {
-                        Authorization: `Bearer ${cookies.token}`
-                    }
-                }
-            )
-
-
-
-            if(resp.data){
+            })
+            console.log(resp);
+            if (resp) {
                 toast.success("Reservation Completed Successfully", {
                     position: "top-left"
-                  });
+                });
+                setTimeout(() => {
+                    navigate('/profile')
+                }, 4000)
             }
+
         } catch (error) {
-            console.log(error);
-            toast.error(" oops... something went wrong !", {
+            toast.error("oops... Something went Wrong ", {
                 position: "top-left"
-              });
+            });
+            console.log(error.message);
+            setTimeout(() => {
+                navigate('/')
+            }, 4000)
+           
         }
+
 
     }
     const formSubmit = (e) => {
@@ -87,8 +91,6 @@ const Reservation = () => {
 
 
     useEffect(() => {
-
-
 
         fetch()
         return () => {
@@ -102,7 +104,7 @@ const Reservation = () => {
 
         <>
 
-<ToastContainer />
+            <ToastContainer />
             <div className="pt-8 max-w-6xl mx-auto w-full px-2 sm:px-4 md:px-8 flex content-start justify-center flex-col sm:flex-row">
                 <form onSubmit={formSubmit} className='bg-gray-300 flex-1 w-1/2 ' >
 
@@ -133,7 +135,7 @@ const Reservation = () => {
                         </div>
                         <div className="mt-4 text-left">
                             <label htmlFor="Password" className='mb-4' > Order Notes </label>
-                            <textarea rows={3} id='Password' type="text" name='orderNote' className='w-full mt-2 p-2' />
+                            <textarea onChange={inputEventHandler} rows={3} id='Password' type="text" name='orderNote' className='w-full mt-2 p-2' />
                         </div>
                         <div className="mt-4 text-left">
                             <label htmlFor="Password" className='mb-4' >Account Password</label>
@@ -156,15 +158,15 @@ const Reservation = () => {
                             <h3 className="text-xl dark:text-white font-semibold leading-5 text-gray-800">Summary</h3>
                             <div className="flex justify-center items-center w-full space-y-4 flex-col border-gray-200 border-b pb-4">
                                 <div className="flex justify-between w-full">
-                                    <p className="text-base dark:text-white leading-4 text-gray-800">Subtotal</p>
+                                    <p className="text-base dark:text-white leading-4 text-gray-800">Room Price/Day</p>
                                     <p className="text-base dark:text-gray-300 leading-4 text-gray-600">${slip.price}</p>
                                 </div>
                                 <div className="flex justify-between items-center w-full">
-                                    <p className="text-base dark:text-white leading-4 text-gray-800">2 days - 3 rooms </p>
+                                    <p className="text-base dark:text-white leading-4 text-gray-800">{slip.noOfDay} days - {slip.numberOfRooms} rooms </p>
 
                                 </div>
                                 <div className="flex justify-between items-center w-full">
-                                    <p className="text-base dark:text-white leading-4 text-gray-800">10-5-2024</p>
+                                    <p className="text-base dark:text-white leading-4 text-gray-800">{ slip?.start_date?.split('T')[0] } To { slip?.end_date?.split('T')[0] }</p>
 
                                 </div>
                                 <div className="flex justify-between items-center w-full">

@@ -8,31 +8,20 @@ const filterAndFindRoom = async (req, res, next) => {
     console.log('req hitting.......filter and find roomm');
 
     const { start_date, end_date, searchparam, numberOfRooms, roomId } = req.body
+    console.log(req.body);
     const roomIdObj = new ObjectId(roomId);
 
     try {
 
-        const pipeline = [];
-
-        if (searchparam !== undefined) {
-            pipeline.push({
+        const getrooms = await rooms.aggregate([
+            {
                 $match: {
                     "location": {
                         $regex: 'uganda'
                     },
                     price: { $gte: 400, $lte: 8000 }
                 }
-            });
-        } else {
-            pipeline.push({
-                $match: {
-                    _id: roomIdObj,
-                }
-            });
-        }
-
-
-        pipeline.push(
+            },
             { $unwind: "$roomStructure" },
             {
                 $match: {
@@ -79,8 +68,9 @@ const filterAndFindRoom = async (req, res, next) => {
                     avilableRoomCount: { $gte: numberOfRooms }
                 }
             }
-        );
-        const getrooms = await rooms.aggregate(pipeline)
+
+        ])
+
 
         // Execute the aggregation pipeline using db.collection.aggregate(pipeline)
         // Example: db.collection.aggregate(pipeline).toArray((err, results) => { ... });

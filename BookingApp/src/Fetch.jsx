@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import api from './Services/api';
 import { useData } from './Context/Context';
+import AxiosBuilder from './Services/AxiosBuilder';
 
 function DataFetcher(WrappedComponent, url) {
 
@@ -12,28 +13,23 @@ function DataFetcher(WrappedComponent, url) {
     const [error, setError] = useState(null);
 
     const { today, tomorrowString, dates, searchParam ,count } = useData()
+  
 
-    let param = {
-      start_date: today,
-      end_date: tomorrowString,
-      searchparam: "uganda",
-      numberOfRooms:1
-    }
-    if (props.searchParam) {
-      param = {
+   
+      const param = {
         searchparam: searchParam,
         start_date: dates.startDate,
         end_date: dates.endDate,
         numberOfRooms:count
       }
 
-    }
-
+ 
     useEffect(() => {
 
       const fetchData = async () => {
 
         try {
+          
           const response = await api.post(url,
 
             {

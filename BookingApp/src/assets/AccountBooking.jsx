@@ -2,7 +2,7 @@ import React from 'react'
 
 
 const AccountBooking = ({reservation}) => {
-  console.log(reservation);
+
     return (
         <><div className="bg-white shadow-lg rounded-lg overflow-hidden m-4">
         <div className="px-6 py-4">

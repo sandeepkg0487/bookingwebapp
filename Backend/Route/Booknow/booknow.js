@@ -52,24 +52,26 @@ Route.post('/book-room', authMiddleware, getSlip, filterAndFindRoom, async (req,
 
 
     const { hotelId, roomId, start_date, end_date, numberOfRooms, } = req.body;
+
+    console.log(req.body.formdata);
     // console.log('----------------------------------------')
     // console.log(req.body);
     // console.log('----------------------------------------');
     try {
 
-
         const userId = req.jwt.userId
-
-
         const user = await usermodel.findOne({ _id: userId });
+        const fullName = req.body.formdata.firstName.concat(" ", req.body.formdata.lastName)
+        const orderNote = req.body.formdata.orderNote
+        const phone = user.phone
+        const booking = { start: new Date(start_date), end: new Date(end_date), name: fullName, phone, userId, orderNote };
+        const roomNubmber = req.getrooms[0].availableRooms
+
+
         if (!user) {
             return res.send("somting went wrong user is not authenticated")
         }
-        const name = user.name
-        const phone = user.phone
 
-        const booking = { start: new Date(start_date), end: new Date(end_date), name: name, phone: phone, userid: userId };
-        const roomNubmber = req.getrooms[0].availableRooms
         let i = 0
         console.log('roomNubmber.length < numberOfRooms', roomNubmber.length, numberOfRooms);
         if (roomNubmber.length < numberOfRooms) {
@@ -90,10 +92,9 @@ Route.post('/book-room', authMiddleware, getSlip, filterAndFindRoom, async (req,
             }
             i++
 
-            
 
         }
-console.log('req.slip.total',req.slip.total);
+        console.log('req.slip.total', req.slip.total);
         const slip = bookingModel({
             userId: userId,
             hotelId: hotelId,
@@ -106,7 +107,7 @@ console.log('req.slip.total',req.slip.total);
 
         const bookingslip = await slip.save()
 
-        console.log("::::slip::::",slip);
+        console.log("::::slip::::", slip);
 
 
         res.status(201).json({ message: 'Availability added successfully', bookingslip });

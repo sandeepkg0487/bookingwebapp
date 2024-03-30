@@ -2,20 +2,30 @@ import React, { useEffect, useState } from 'react';
 import AccountBooking from './AccountBooking';
 import api from '../Services/api';
 import { useCookies } from 'react-cookie';
+import AxiosBuilder from '../Services/AxiosBuilder';
+
 
 const UpcomingPage = () => {
   const [reservations, setReservations] = useState([]);
-  const [cookies] = useCookies(['token']);
+  const [cookies] = useCookies()
+  const fetchProtectedData = AxiosBuilder()
 
   const fetchData = async () => {
     try {
-      console.log(cookies.token);
-      const response = await api.get('/user/getBooking',
-      {
-        headers: {"Authorization" : `Bearer ${cookies.token}`}
-      });
-      setReservations(response.data.data);
-      console.log(response.data); // Logging the response data after setting the state
+      const accesstoken = cookies.accessToken
+      console.log(accesstoken);
+
+      // const response = await api.get('/user/getBooking',
+      // {
+      //   headers: {"Authorization" : `Bearer ${cookies.accessToken}`}
+      // });
+
+const response = await fetchProtectedData('/user/getBooking','GET')
+
+
+console.log(response);
+      setReservations(response.data);
+      // Logging the response data after setting the state
     } catch (error) {
       console.error('Error fetching data:', error);
     }

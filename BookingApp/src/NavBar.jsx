@@ -9,7 +9,7 @@ import { useAuth } from './AuthProtection/AuthContext';
 const NavBar = () => {
 
   const [isOpen, setIsOpen] = useState(false);
-  const { logout } = useAuth()
+  const { logout ,username} = useAuth()
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -29,7 +29,7 @@ const NavBar = () => {
 
         <div className="text-center mt-2">
           <h2 className="font-semibold">Sarah Smith</h2>
-          <p className="text-gray-500">Freelance Web Designer</p>
+          <p className="text-gray-500">{sessionStorage?.getItem('username')}</p>
         </div>
         <div className='pt-2 '>
 

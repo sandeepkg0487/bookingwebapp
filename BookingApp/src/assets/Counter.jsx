@@ -5,22 +5,18 @@ const Counter = () => {
     const { handleCounterClick, count } = useData()
 
     return (<>
-
-
-
-
         <div className="group relative cursor-pointer ">
 
             <div className="flex items-center justify-between space-x-5 bg-white px-4">
-                <a className="menu-hover my-2 py-2 text-base font-medium text-black lg:mx-4" onClick="">
+                <a className="menu-hover my-2 py-2 text-base font-medium text-gray-500 lg:mx-4" onClick="">
                     No of Rooms {count}
                 </a>
-                {/* <span>
+                 <span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" className="h-6 w-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                     </svg>
-                </span> */}
+                </span> 
             </div>
 
 

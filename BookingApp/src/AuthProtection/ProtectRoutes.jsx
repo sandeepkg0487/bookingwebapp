@@ -8,7 +8,7 @@ const { cookies, } = useAuth()
 const location =  useLocation()
 
   return (
-    cookies.token ? <Outlet/> :<Navigate to = 'login'  state={{from:location}}/>
+    cookies.rolle = 'user' ? <Outlet/> :<Navigate to = 'login'  state={{from:location}}/>
   )
 }
 

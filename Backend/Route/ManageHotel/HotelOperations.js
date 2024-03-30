@@ -5,6 +5,7 @@ const Multer = require("multer");
 const { handleUpload } = require('../../controller/cloudinaryUoload');
 const { rooms, hotel } = require('../../Model/userschema');
 const { generateJWT, authMiddleware } = require('../../controller/jwt');
+const { default: mongoose } = require('mongoose');
 const ObjectId = require('mongodb').ObjectId;
 
 
@@ -207,22 +208,23 @@ Route.get("/getBooking", authMiddleware, async (req, res) => {
 });
 //  view user  booking details for hotels FOR ROOMWISE VIEW 
 //SORT BY ROOM AND DATE TO SHOW BOOKING  
-Route.get("/getBookingByRoom", async (req, res) => {
+Route.get("/getBookingByRoom",authMiddleware, async (req, res) => {
 
 
   console.log("userId }}}}}}}}}}}}}}}}}}}}}}]")
-  // const isModerator = req?.jwt?.isModerator || false;
-  // const userId = req?.jwt?.userId || null;
-  // console.log("param", req.query)
-  // const searchDate = req.query.date
-  // const roomIdObj = new ObjectId(req.query.roomid);
+  const isModerator = req?.jwt?.isModerator || false;
+  const userId = req?.jwt?.userId || null;
+  console.log("param", req.query)
+  const searchDate = req.query.date
+  const roomIdObj = new ObjectId(req.query.roomid);
+  console.log(roomIdObj);
 
   if (true) {
     try {
       const result = await rooms.aggregate([
         {
           "$match": {
-            hotelid: "66004539cf8d93c22d16cc0e"
+            _id: roomIdObj
           }
         },
         {
@@ -237,8 +239,8 @@ Route.get("/getBookingByRoom", async (req, res) => {
                 as: "booking",
                 cond: {
                   $and: [
-                    { $lte: ["$$booking.start", new Date("2024-03-16")] }, // Filter by start date greater than or equal to searchDate
-                    { $gte: ["$$booking.end", new Date("2024-03-17")] }   // Filter by end date less than or equal to searchDate
+                    { $lte: ["$$booking.start", new Date(searchDate)] }, // Filter by start date greater than or equal to searchDate
+                    { $gte: ["$$booking.end", new Date(searchDate)] }   // Filter by end date less than or equal to searchDate
                   ]
                 }
               }

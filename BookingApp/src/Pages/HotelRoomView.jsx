@@ -6,6 +6,7 @@ import HoteldashboardCard from '../assets/HoteldashboardCard';
 const HotelRoomView = () => {
     const { cookies } = useAuth();
     const [rooms, setRooms] = useState([]);
+    const [roomstatus, setRoomstatus] = useState([])
     const [sel, setSel] = useState('')
 
     const handlInput = (event) => {
@@ -18,15 +19,15 @@ const HotelRoomView = () => {
 
 
     const headers = {
-        
-            'Authorization': `Bearer ${cookies.token}`,
-            'Content-Type': 'application/json'
-        }
-    
+
+        'Authorization': `Bearer ${cookies.token}`,
+        'Content-Type': 'application/json'
+    }
+
 
     const fetchHotel = async () => {
         try {
-            const response = await api.get('/hotel/getBooking', {headers:headers});
+            const response = await api.get('/hotel/getBooking', { headers: headers });
             console.log(response.data);
             setRooms(response.data.data);
         } catch (error) {
@@ -42,9 +43,9 @@ const HotelRoomView = () => {
         }
         console.log(params);
         try {
-            const response = await api.get('/hotel/getBookingByRoom',{headers :headers,params:params} );
+            const response = await api.get('/hotel/getBookingByRoom', { headers: headers, params: params });
             console.log(response.data);
-           
+            setRoomstatus(response.data.data )
         } catch (error) {
             console.log(error.message);
         }
@@ -78,13 +79,14 @@ const HotelRoomView = () => {
                         </div>
                         <div className="mt-6">
                             <button className="active:scale-95 rounded-lg m-4 bg-gray-200 px-8 py-2 font-medium text-gray-600 outline-none focus:ring hover:opacity-90">Reset</button>
-                            <button onClick={()=>{fetchRoom()}} className="active:scale-95 rounded-lg m-4 bg-blue-600 px-8 py-2 font-medium text-white outline-none focus:ring hover:opacity-90">Search</button>
+                            <button onClick={() => { fetchRoom() }} className="active:scale-95 rounded-lg m-4 bg-blue-600 px-8 py-2 font-medium text-white outline-none focus:ring hover:opacity-90">Search</button>
                         </div>
                     </div>
                 </div>
                 <div>
-
-                    <HoteldashboardCard />
+                    { Array.isArray(roomstatus) && roomstatus.map((data, index) => (
+                        <HoteldashboardCard key={index} roomstatus={data} />
+                    ))}
                 </div>
             </div>
         </>

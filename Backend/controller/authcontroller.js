@@ -1,7 +1,7 @@
 const { usermodel } = require('../Model/userschema')
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
-const { generateJWT } = require('./jwt');
+const { generateJWT, generateRefreshJWT } = require('./jwt');
 
 
 
@@ -25,12 +25,23 @@ async function registercontroll(req, res, next) {
         // create usermodel data
         const user = new usermodel({ firstname, lastname, email, password: hashedPassword, phone })
         await user.save();
+
+
+
+
+
+
         const payload = {
             userId: user._id,
             email: user.email,
         };
-        const token = generateJWT(payload)
-        console.log("token:", token);
+        const refreshTokenPayload = {
+            email: user.email,
+        };
+
+
+        const accessToken = generateJWT(payload)
+        const refreshToken = generateRefreshJWT(refreshTokenPayload)
 
         //SEND RESPONSE
         res
@@ -86,8 +97,14 @@ const logincontroll = async (req, res, next) => {
             userId: user._id,
             email: user.email,
         };
-        const token = generateJWT(payload)
-        console.log("token:", token);
+        const refreshTokenPayload = {
+            email: user.email,
+        };
+
+
+        const accessToken = generateJWT(payload)
+        const refreshToken = generateRefreshJWT(refreshTokenPayload)
+        console.log("accessToken:", accessToken);
         //SEND RESPONSE
         res
             .status(200)
@@ -95,7 +112,8 @@ const logincontroll = async (req, res, next) => {
                 message: "Login Successful",
                 status: 'success',
                 email: user.email,
-                token,
+                accessToken,
+                refreshToken
             });
 
     } catch (err) {
