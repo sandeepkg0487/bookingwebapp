@@ -2,6 +2,10 @@ const express = require('express')
 const { authMiddleware } = require('../../controller/jwt');
 const { usermodel, rooms, bookingModel } = require('../../Model/userschema');
 const { ObjectId } = require('mongodb');
+const filterAndFindRoom = require('../../controller/filterAndFindRoom');
+const getSlip = require('../../controller/getSlip');
+
+
 
 const Route = express()
 
@@ -27,157 +31,95 @@ Route.get("/getRoom/:id", async (req, res) => {
 })
 
 // findRoom by user >>>>> make api for enter single hotel page
-Route.post("/findRoom", async (req, res) => {
+Route.post("/findRoom", filterAndFindRoom, (req, res) => {
 
-    const { from_date, to_date, objectId } = req.body
-    console.log(from_date, to_date, objectId);
-    // const from_date = new Date('2024-03-18')
-    // const to_date = new Date(new Date('2024-03-21'))
-    // console.log(from_date);
-    // const objectId = new ObjectId("66004471cf8d93c22d16cc0b");
-    try {
-        const getrooms = await rooms.aggregate([
-            {
-                $match: {
-                    hotelid: objectId
-                }
-            },
-
-            {
-                $unwind: "$roomStructure"
-            },
-            {
-                $match: {
-                    "roomStructure.booking": {
-                        $not: {
-                            $elemMatch: {
-                                $or: [
-                                    { start: { $gt: new Date(from_date), $lt: new Date(to_date) } },
-                                    { end: { $gt: new Date(from_date), $lt: new Date(to_date) } },
-                                    { $and: [{ start: { $lte: from_date } }, { end: { $gte: to_date } }] }
-                                ]
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                $project: {
-                    hotelid: 1,
-                    roomType: 1,
-                    price: 1,
-                    capacity: 1,
-                    extras: 1,
-                    images: 1,
-                    roomNumber: "$roomStructure.roomNumber",
-                    booking: "$roomStructure.booking"
-                }
-            },
-            {
-                $group:
-                {
-                    _id: { roomType: "$roomType", roomid: "$_id" },
-                    avilableRoom: { $push: "$roomNumber" },
-                    price: { $first: "$price" },
-                    capacity: { $first: "$capacity" },
-                    extras: { $first: "$extras" },
-                    images: { $first: "$images" },
-                }
-            }
-
-        ]);
-
-        console.log(getrooms)
-        res.send(getrooms)
-
-    } catch (error) {
-        res.status(500).json({ error: error.message })
-    }
-
+    console.log("final result", req.getrooms);
+    res.send(req.getrooms)
 
 });
 
 // make booking by user >>>>
-Route.post('/book-room', async (req, res) => {
+Route.post('/book-room', authMiddleware, getSlip, filterAndFindRoom, async (req, res) => {
+
+    // step 1: authenticate password
+    // stpe 2: check the userinput is true such as slip
+    // step 3:check  room is avivlable for the date 
+    // stpe 4:make booking room one by one 
+    // step 5:send result 
+
+
+
+
+
+    const { hotelId, roomId, start_date, end_date, numberOfRooms, } = req.body;
+    // console.log('----------------------------------------')
+    // console.log(req.body);
+    // console.log('----------------------------------------');
     try {
-        const { hotelId, roomNumber, start, end, numberOfRoom } = req.body; // Assuming you're passing hotelId, roomNumber, start, and end in the request body
+
+
         const userId = req.jwt.userId
 
-        console.log(userId);
-        console.log(hotelId, roomNumber, start, end);
+
         const user = await usermodel.findOne({ _id: userId });
         if (!user) {
-            return res.send("somting went wrong")
+            return res.send("somting went wrong user is not authenticated")
         }
         const name = user.name
         const phone = user.phone
-        console.log(hotelId, roomNumber)
-        const booking = { start: new Date(start), end: new Date(end), name: name, phone: phone, userid: userId };
 
-        const result = await rooms.findOneAndUpdate(
-            { hotelid: hotelId, 'roomStructure.roomNumber': roomNumber },
-            { $push: { 'roomStructure.$.booking': booking } },
-            { 'roomStructure.$': 1 }//is provided, Mongoose will return the modified document rather than the original document before the update.
-        );
-
-
-        if (!result) {
-            return res.status(404).json({ message: 'Room not found' });
+        const booking = { start: new Date(start_date), end: new Date(end_date), name: name, phone: phone, userid: userId };
+        const roomNubmber = req.getrooms[0].availableRooms
+        let i = 0
+        console.log('roomNubmber.length < numberOfRooms', roomNubmber.length, numberOfRooms);
+        if (roomNubmber.length < numberOfRooms) {
+            res.status(500).json({ status: "faild", message: "room cannot be available" })
         }
+        while (numberOfRooms > i) {
+            console.log("while...........");
+            const roomIdObj = new ObjectId(roomId);
+            let result = await rooms.findOneAndUpdate(
+                { _id: roomIdObj, 'roomStructure.roomNumber': roomNubmber[i] },
+                { $push: { 'roomStructure.$.booking': booking } },
+                { 'roomStructure.$': 1 }//is provided, Mongoose will return the modified document rather than the original document before the update.
+            );
+
+
+            if (!result) {
+                return res.status(404).json({ message: 'Room not found' });
+            }
+            i++
+
+            
+
+        }
+console.log('req.slip.total',req.slip.total);
         const slip = bookingModel({
             userId: userId,
             hotelId: hotelId,
-            startFrom: start,
-            endsOn: end,
-            numberOfRoom: numberOfRoom,
-            // amountTobePayed:
+            startFrom: new Date(start_date),
+            endsOn: new Date(end_date),
+            numberOfRoom: numberOfRooms,
+            amountTobePayed: req.slip.total
 
         })
 
         const bookingslip = await slip.save()
 
+        console.log("::::slip::::",slip);
 
 
-
-        res.json({ message: 'Availability added successfully', user });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
-});
-
-Route.post('/getPrice', async (req, res) => {
-    try {
-        const { roomId, noOfRomm, start_date, end_date } = req.body; // Assuming you're passing hotelId, roomNumber, start, and end in the request body
-        //const userId = req.jwt.userId
-        console.log( roomId, noOfRomm, start_date, end_date);
-
-        let date1 = new Date(start_date);
-        let date2 = new Date(end_date);
-
-        let Difference_In_Time =
-            date2.getTime() - date1.getTime();
-
-        let Difference_In_Days =
-            Math.round
-                (Difference_In_Time / (1000 * 3600 * 24));
-
-   
-        const singleRoom = await rooms.findOne({ _id: roomId });
-        if (!singleRoom) {
-            return res.send("somting went wrong")
-        }
-        const price = singleRoom.price
-        const total = price * noOfRomm * Difference_In_Days
-        console.log(total)
-
-        res.status(200).json({ status: "success", price: price, noOfRomm: noOfRomm, noOfDay: Difference_In_Days, start_date: date1, end_date: end_date, });
+        res.status(201).json({ message: 'Availability added successfully', bookingslip });
 
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
+}
+);
+
+Route.post('/getPrice', getSlip, (req, res) => {
+    res.status(200).json(req.slip);
 });
 
 module.exports = Route

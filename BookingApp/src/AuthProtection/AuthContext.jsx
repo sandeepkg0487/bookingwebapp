@@ -63,6 +63,8 @@ export const AuthContextprovider = ({ children }) => {
 
     const logout = () => {
         removeCookie('token')
+        removeCookie('isAuth')
+        // removeCookie('')
         // navigate('/login')
     }
 

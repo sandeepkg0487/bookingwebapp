@@ -82,6 +82,10 @@ const roomSchema = new Schema({
         type: String,
         required: true
     },
+    location: {
+        type: String,
+        required: true,
+    },
     roomType: {
         type: String
     },

@@ -5,6 +5,7 @@ const Multer = require("multer");
 const { handleUpload } = require('../../controller/cloudinaryUoload');
 const { rooms, hotel } = require('../../Model/userschema');
 const { generateJWT, authMiddleware } = require('../../controller/jwt');
+const ObjectId = require('mongodb').ObjectId;
 
 
 const storage = new Multer.memoryStorage();
@@ -130,8 +131,8 @@ Route.post("/addRoom", authMiddleware, upload.single("my_file"), async (req, res
     let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
     const cldRes = await handleUpload(dataURI);
     const hotelid = req.jwt.userId
-    const { roomType, numberOfRooms, price, capacity, extras } = req.body
-    console.log(hotelid, roomType, numberOfRooms, price, capacity, extras);
+    const { roomType, numberOfRooms, price, capacity, extras, location } = req.body
+    console.log(hotelid, roomType, numberOfRooms, price, capacity, extras, location);
 
 
 
@@ -152,6 +153,7 @@ Route.post("/addRoom", authMiddleware, upload.single("my_file"), async (req, res
 
     const makeAdd = new rooms({
       hotelid,
+      location,
       roomType,
       numberOfRooms,
       price,
@@ -184,15 +186,77 @@ Route.get("/getBooking", authMiddleware, async (req, res) => {
   const isModerator = req?.jwt?.isModerator || false;
   const userId = req?.jwt?.userId || null;
   console.log("userId", userId)
+
   if (isModerator) {
     try {
-      const result = await rooms.find({ _id: userId })
+      const result = await rooms.find({ hotelid: userId.toString() })
+        .select('_id location roomType')
 
       if (result) {
+        console.log(result);
         return res.status(200).json({ message: "success", data: result })
       }
       return res.status(404).json({ message: "no data to fetch", data: result })
     } catch (error) {
+      return res.status(500).json({ message: "faild to fetch data ", })
+    }
+
+  }
+  res.status(403).json({ message: "Access Forbidden" })
+
+});
+//  view user  booking details for hotels FOR ROOMWISE VIEW 
+//SORT BY ROOM AND DATE TO SHOW BOOKING  
+Route.get("/getBookingByRoom", async (req, res) => {
+
+
+  console.log("userId }}}}}}}}}}}}}}}}}}}}}}]")
+  // const isModerator = req?.jwt?.isModerator || false;
+  // const userId = req?.jwt?.userId || null;
+  // console.log("param", req.query)
+  // const searchDate = req.query.date
+  // const roomIdObj = new ObjectId(req.query.roomid);
+
+  if (true) {
+    try {
+      const result = await rooms.aggregate([
+        {
+          "$match": {
+            hotelid: "66004539cf8d93c22d16cc0e"
+          }
+        },
+        {
+          "$unwind": "$roomStructure"
+        },
+        {
+          $project: {
+            roomNumber: "$roomStructure.roomNumber",
+            booking: {
+              $filter: {
+                input: "$roomStructure.booking",
+                as: "booking",
+                cond: {
+                  $and: [
+                    { $lte: ["$$booking.start", new Date("2024-03-16")] }, // Filter by start date greater than or equal to searchDate
+                    { $gte: ["$$booking.end", new Date("2024-03-17")] }   // Filter by end date less than or equal to searchDate
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+      )
+
+
+      console.log(result);
+      if (result) {
+        console.log(result);
+        return res.status(200).json({ message: "success", data: result })
+      }
+      return res.status(404).json({ message: "no data to fetch", data: result })
+    } catch (error) {
+      console.log(error.message);
       return res.status(500).json({ message: "faild to fetch data ", })
     }
 

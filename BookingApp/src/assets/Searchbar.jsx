@@ -1,13 +1,17 @@
-import React from 'react'
 import { useData } from '../Context/Context';
+import React, {useState} from "react"; 
+import Datepicker from "react-tailwindcss-datepicker"; 
+import Counter from './Counter';
+
 
 const Searchbar = ({ propdata }) => {
 
 
-    const today = new Date().toISOString().split('T')[0];
+   
 
-    const { setSearchparam ,tomorrowString, } = useData()
-
+    const { searchParam, setSearchParam, today, tomorrowString,handleDateChange ,dates} = useData()
+   
+console.log(searchParam);
     return (
         <section className="mt-1">
             <div className="bg-teal-500 text-white -skew-y-1">
@@ -36,29 +40,28 @@ const Searchbar = ({ propdata }) => {
                                                     </path>
                                                 </svg>
                                             </div>
-                                            <input onChange={setSearchparam} type="text" name="searchInput" placeholder="Search here for threads" required className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
+                                            <input onChange={e=>setSearchParam(e.target.value)} type="text" name="searchInput" placeholder="Search here for threads" required className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
                                         </div>
 
                                         <div className="flex-1">
-                                            <input
-                                                onChange={setSearchparam}
-                                                min={today}
-                                                defaultValue={today}
+
+                                            <Datepicker
+                                            inputClassName=" border-x-2 border-gray-500 p-4 pl-10 text-gray-600 rounded w-full border-gray-100  " 
+                                                // minDate={today}
+                                                popoverDirection="down" 
                                                 required
-                                                type="date" name="startDate" className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
+                                                value={dates}
+                                                onChange={handleDateChange}
 
+                                            />
+                                           
+                                        </div>
+                                        <div className="flex-1  ">
+                                            
+                                        <Counter/>
                                         </div>
 
-                                        <div className="flex-1">
-                                            <input
-                                                                                                                         
-                                                min={tomorrowString}
-                                                defaultValue={tomorrowString}
-                                                onChange={setSearchparam}
-                                                type="date" name="endDate" required className="p-4 pl-10 text-gray-600 rounded w-full border-gray-100" />
-
-                                        </div>
-
+                                       
                                         <div className="flex-1">
                                             <button type='submit' className="w-full bg-blue-700 hover:bg-blue-500 text-white font-bold p-4 pl-10 border-gray-100 rounded focus:outline-none focus:shadow-outline">
                                                 Search

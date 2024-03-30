@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Counetr from '../assets/Counetr';
+import Counetr from '../assets/Counter';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
 
 const RoomCard = ({ data }) => {
-    console.log(data);
+  
     const [count, setCount] = useState(1)
     const handleClick = (e) => {
         if (e.target.dataset.action === 'increment') {

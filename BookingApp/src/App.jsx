@@ -19,6 +19,7 @@ import { HotelAuthcontextprovider } from './AuthProtection/HotelAuthcontext'
 import HotelLogin from './Pages/HotelLogin'
 import HotelRoomView from './Pages/HotelRoomView'
 import HotelAddRoom from './Pages/HotelAddRoom'
+import DatePicker from './DatePicker'
 
 function App() {
 
@@ -53,8 +54,9 @@ function App() {
                 <Route path="/HotelAddRoom" element={<HotelAddRoom />}></Route>
                 
                 <Route path="/" element={<Home />}></Route>
-                <Route path="/Hotel/:hid" element={<HotelHome />}></Route>
-                <Route path="/Hotel/:hid/Reservation/:Rid/:noOfRoom" element={<Reservation />}></Route>
+                <Route path="/date" element={<DatePicker />}></Route>
+                <Route path="/Hotel/:Rid/:hid" element={<HotelHome />}></Route>
+                <Route path="/Hotel/:Rid/:hid/Reservation/" element={<Reservation />}></Route>
                 <Route path="/**" element={<Home />}></Route>
 
 

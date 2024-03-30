@@ -29,7 +29,7 @@ const navigate = useNavigate()
       {/* item.images[0].profile_img */}
         <img className="w-full" src={'replace'} alt="Sunset in the mountains" />
         <div  className="px-6 py-4">
-          <div className="font-bold text-xl mb-2">{item.hotelName}</div>
+          <div className="font-bold text-xl mb-2">{item._id.roomType}</div>
 
           <div className="flex items-center ">
             <img className='object-cover h-full' src="./location.png" alt="icon" />
@@ -87,7 +87,7 @@ const navigate = useNavigate()
           <div className="flex items-center justify-between">
             <Link
             // onClick={buttonEvenet}
-             to={`/Hotel/${item._id}`}
+             to={`/Hotel/${item._id.roomid}/${item.hotelid}`}
               className="rounded-lg bg-cyan-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-800 focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
             >
               Book Now

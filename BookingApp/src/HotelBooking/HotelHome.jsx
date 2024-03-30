@@ -5,66 +5,22 @@ import api from '../Services/api'
 import { useParams } from 'react-router'
 import Searchbar from '../assets/Searchbar'
 import useDataCollection from '../Hooks/useDataCollection'
+import { Link } from 'react-router-dom'
+import Counetr from '../assets/Counter'
 
 const HotelHome = () => {
 
-
-    const [RoomsofHotel, setRoomsofHotel] = useState([])
-    const [searchstr, setSearchstr] = useState()
-    const { data, handleFormSubmit, inputEventHandler } = useDataCollection()
-    const { hid } = useParams()
-    const { search ,setApidata } = useData()
-
-
-    const updateSearchData = () => {
-        setSearchstr((prev) => data.search)
-    };
-
-
-    const [data1, setData1] = useState([]);
-    const [data2, setData2] = useState([]);
-
-
-    const fetchData = async () => {
-        try {
-
-            const [response1, response2] = await Promise.all([
-                api.get(`booknow/getRoom/${hid}`),
-                api.post('/booknow/findRoom', {
-                    from_date: search.startDate,
-                    to_date: search.endDate,
-                    objectId:hid,
-                })
-            ]);
-
-
-            setData1(response1.data);
-            setData2(response2.data);
-            setApidata(response2.data)
-
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    }
+    
 
     useEffect(() => {
 
-
-
-        fetchData();
+      
     }, []);
-    useEffect(() => {
-        console.log('data1:', data1);
-        console.log('data2:', data2);
-    }, [data1, data2])
 
 
     return (
         <div>
-            <Searchbar
-                propdata={{ updateSearchData, data, handleFormSubmit, inputEventHandler }}
 
-            />
             <div className="bg-gray-100 dark:bg-gray-800 py-8 ">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row -mx-4">
@@ -132,20 +88,30 @@ const HotelHome = () => {
 
                                             <p className='text-start pl-2'> Free WiFi  </p>
                                         </div>
-
+                           
                                     </div>
-
+                                    <div className=" p-0 mt-4 ">
+                                        <Link to={`./Reservation`} >
+                                            <button
+                                                className="float-right align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-sm py-3.5 px-7 rounded-lg bg-blue-700 text-white  hover:scale-[1.02] focus:scale-[1.02] active:scale-100"
+                                                type="button">
+                                                Book Now
+                                            </button>
+                                        </Link>
+                                    </div>
                                 </div>
 
                             </div>
 
                         </div>
+
                     </div>
-                    {
+
+                    {/* {
                         data2.map((data, index) => (
                             <RoomCard key={index} data={data} />
                         ))
-                    }
+                    } */}
 
                 </div>
             </div>

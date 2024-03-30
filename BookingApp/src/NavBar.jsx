@@ -19,10 +19,7 @@ const NavBar = () => {
   // boxOutsideClick will be true on outside click
   const boxOutsideClick = OutsideClick(boxRef);
 
-  useEffect(() => {
-
-    console.log("is open ,outside", isOpen, boxOutsideClick);
-  }, [isOpen, boxOutsideClick])
+ 
 
   return (
     <div className="relative">
@@ -43,7 +40,13 @@ const NavBar = () => {
             <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g stroke="#2a353d" strokeWidth="1.5"><rect height="10" rx="2" width="8" x="2" y="2" /><rect height="6" rx="2" width="8" x="2" y="16" /><rect height="10" rx="2" width="8" x="14" y="12" /><rect height="6" rx="2" width="8" x="14" y="2" /></g></svg>
             My Account
           </Link>
-
+          <Link
+            to={'/login'}
+            className=" flex text-gray-500 px-3 py-2 rounded-md text-sm font-medium"
+          >
+            <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><g stroke="#2a353d" strokeWidth="1.5"><rect height="10" rx="2" width="8" x="2" y="2" /><rect height="6" rx="2" width="8" x="2" y="16" /><rect height="10" rx="2" width="8" x="14" y="12" /><rect height="6" rx="2" width="8" x="14" y="2" /></g></svg>
+            Login
+          </Link>
           <Link
             to={'/HotelLogin'}
             className=" flex text-gray-500 px-3 py-2 rounded-md text-sm font-medium"

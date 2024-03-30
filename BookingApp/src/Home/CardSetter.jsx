@@ -16,4 +16,4 @@ const CardSetter = ({ data }) => {
 }
 
 
-export default DataFetcher(CardSetter, 'http://localhost:3001/search');
+export default DataFetcher(CardSetter, '/booknow/findRoom'); 

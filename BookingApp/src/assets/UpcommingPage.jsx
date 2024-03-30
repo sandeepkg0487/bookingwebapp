@@ -14,7 +14,7 @@ const UpcomingPage = () => {
       {
         headers: {"Authorization" : `Bearer ${cookies.token}`}
       });
-      setReservations(response.data);
+      setReservations(response.data.data);
       console.log(response.data); // Logging the response data after setting the state
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -30,7 +30,7 @@ const UpcomingPage = () => {
       <h1 className="text-2xl font-medium text-left py-4">3 Upcoming bookings</h1>
       {Array.isArray(reservations) && reservations.length > 0 ? (
         reservations.map((reservation) => (
-          <AccountBooking key={reservation.id} data={reservation} /> // Pass reservation as prop, not data
+          <AccountBooking key={reservation.id} reservation={reservation} /> // Pass reservation as prop, not data
         ))
       ) : (
         <p>No reservations found</p>
