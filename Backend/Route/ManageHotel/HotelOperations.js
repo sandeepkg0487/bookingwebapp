@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const Multer = require("multer");
 const { handleUpload } = require('../../controller/cloudinaryUoload');
 const { rooms, hotel } = require('../../Model/userschema');
-const { generateJWT, authMiddleware } = require('../../controller/jwt');
+const { generateJWT, authMiddleware, generateRefreshJWT } = require('../../controller/jwt');
 const { default: mongoose } = require('mongoose');
 const ObjectId = require('mongodb').ObjectId;
 
@@ -53,10 +53,14 @@ Route.post("/signup", upload.single("my_file"), async (req, res) => {
       userid: makeAdd._id,
       mode: 'Hotel'
     }
-    const token = generateJWT(payload)
+    const refreshTokenPayload = {
+      email:userName ,
+    };
+    const accessToken = generateJWT(payload)
+    const refreshToken = generateRefreshJWT(refreshTokenPayload)
 
 
-    res.status(201).json({ status: "success", token: token });
+    res.status(201).json({ status: "success", accessToken, refreshToken });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -102,15 +106,18 @@ Route.post("/login", async (req, res) => {
     console.log('generating token11')
     console.log(userName,);
     const payload = {
-      userName: userName, //it wil be emailid
+      userName: hotelUser.userName, //it wil be emailid
       userId: hotelUser._id,
       isModerator: true
     }
     console.log('generating token11')
-    const token1 = generateJWT(payload)
-
-
-    res.status(201).json({ status: "success", token: token1 });
+    const refreshTokenPayload = {
+      email: hotelUser.userName,
+    };
+    const accessToken = generateJWT(payload)
+    const refreshToken = generateRefreshJWT(refreshTokenPayload)
+console.log(accessToken,refreshToken);
+   return  res.status(201).json({ status: "success", accessToken , refreshToken});
   } catch (err) {
     console.log('error happen in login authcontroll.js'.err);
   }
@@ -208,7 +215,7 @@ Route.get("/getBooking", authMiddleware, async (req, res) => {
 });
 //  view user  booking details for hotels FOR ROOMWISE VIEW 
 //SORT BY ROOM AND DATE TO SHOW BOOKING  
-Route.get("/getBookingByRoom",authMiddleware, async (req, res) => {
+Route.get("/getBookingByRoom", authMiddleware, async (req, res) => {
 
 
   console.log("userId }}}}}}}}}}}}}}}}}}}}}}]")
@@ -233,6 +240,7 @@ Route.get("/getBookingByRoom",authMiddleware, async (req, res) => {
         {
           $project: {
             roomNumber: "$roomStructure.roomNumber",
+           
             booking: {
               $filter: {
                 input: "$roomStructure.booking",

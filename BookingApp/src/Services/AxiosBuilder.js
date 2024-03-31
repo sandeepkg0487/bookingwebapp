@@ -30,7 +30,7 @@ export default function AxiosBuilder() {
     };
 
     const useProtectedFetch = async (url, method = 'POST', data = '') => {
-       console.log(url,data);
+       console.log(url,data.Rid);
         const accessToken = cookies.accessToken;
         console.log(accessToken);
         const config = {
@@ -39,7 +39,7 @@ export default function AxiosBuilder() {
 
         try {
             console.log(url, method);
-            const response = await axios.request({ url, method, data, ...config });
+            const response = await axios.request({ url, method,params:data ,data, ...config });
             return response.data;
         } catch (error) {
             if (error.response && error.response.status === 401 && cookies.refreshToken && retryAttempts < maxRetryAttempts) {

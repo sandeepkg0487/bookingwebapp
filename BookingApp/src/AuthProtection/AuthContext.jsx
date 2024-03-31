@@ -71,6 +71,7 @@ export const AuthContextprovider = ({ children }) => {
 
     const logout = () => {
         removeCookie('accessToken')
+        removeCookie('refreshToken')
         removeCookie('isAuth')
         removeCookie('role');
         // removeCookie('')

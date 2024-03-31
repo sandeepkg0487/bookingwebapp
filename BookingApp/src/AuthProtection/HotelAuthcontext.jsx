@@ -23,7 +23,8 @@ export const HotelAuthcontextprovider = ({ children }) => {
                  password
             })
 
-            setCookies('token', response.data.token);
+            setCookies('refreshToken', response.data.refreshToken);
+            setCookies('accessToken', response.data.accessToken);
             setCookies('isAuth', true);
             setCookies('role', 'Hotel')
 
@@ -44,7 +45,8 @@ export const HotelAuthcontextprovider = ({ children }) => {
 
     const logout = () => {
 
-        removeCookie('token')
+        removeCookie('refreshToken')
+        removeCookie('accessToken')
         removeCookie('isAuth')
         removeCookie('role')
         // navigate('/login')

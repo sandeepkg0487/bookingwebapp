@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useDataCollection from '../Hooks/useDataCollection';
 import api from '../Services/api';
 
 const HotelSignup = () => {
+    const navigate = useNavigate()
 
     const [image, setImage] = useState(null);
 
@@ -27,6 +28,9 @@ const HotelSignup = () => {
 
         const result = await api.post('/hotel/signup', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
         console.log(result);
+        if(result){
+            navigate('/HotelLogin')
+        }
     }
 
     useEffect(() => {

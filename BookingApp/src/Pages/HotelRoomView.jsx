@@ -20,7 +20,7 @@ const HotelRoomView = () => {
 
     const headers = {
 
-        'Authorization': `Bearer ${cookies.token}`,
+        'Authorization': `Bearer ${cookies.accessToken}`,
         'Content-Type': 'application/json'
     }
 

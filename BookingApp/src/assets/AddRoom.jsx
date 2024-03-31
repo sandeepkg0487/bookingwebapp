@@ -77,37 +77,37 @@ const AddRoom = () => {
         <>
     
      <ToastContainer />
-            <section className="max-w-4xl p-6 mx-auto bg-gray-100 rounded-md shadow-md dark:bg-gray-800 mt-20">
-                <h1 className="text-xl font-bold text-black capitalize dark:text-black">Account settings</h1>
+            <section className="max-w-4xl p-6 mx-auto bg-gray-100 rounded-md shadow-md dark:bg-gray-800  dark:border-2 dark:border-white">
+                <h1 className="text-xl font-bold text-black capitalize dark:text-white">Add Room</h1>
                 <form onSubmit={submit}>
                     <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
                         <div>
                             <label className=" text-black dark:text-gray-200" htmlFor="RoomName">Room Name</label>
-                            <input onChange={inputEventHandler} id="RoomName" name='roomType' type="text" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
+                            <input required onChange={inputEventHandler} id="RoomName" name='roomType' type="text" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
                         </div>
                         <div>
                             <label className=" text-black dark:text-gray-200" htmlFor="location"> Loaction</label>
-                            <input onChange={inputEventHandler} id="location" name='location' type="text" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
+                            <input required onChange={inputEventHandler} id="location" name='location' type="text" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
                         </div>
 
                         <div>
                             <label className="text-black dark:text-gray-200" htmlFor="Price">Price</label>
-                            <input onChange={inputEventHandler} id="Price" name='price' type="number" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
+                            <input  required onChange={inputEventHandler} id="Price" name='price' type="number" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
                         </div>
 
                         <div>
                             <label className="text-black dark:text-gray-200" htmlFor="numberOfRooms">Number Of Rooms</label>
-                            <input onChange={inputEventHandler} name='numberOfRooms' id="numberOfRooms" type="number" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
+                            <input required onChange={inputEventHandler} name='numberOfRooms' id="numberOfRooms" type="number" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
                         </div>
 
                         <div>
                             <label className="text-black dark:text-gray-200" htmlFor="Capacity">Capacity</label>
-                            <input onChange={inputEventHandler} name='capacity' id="Capacity" type="text" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
+                            <input  required onChange={inputEventHandler} name='capacity' id="Capacity" type="text" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring" />
                         </div>
 
                         <div>
                             <label className="text-black dark:text-gray-200" htmlFor="extra">extra</label>
-                            <textarea onChange={inputEventHandler} name='extras' id="extra" type="textarea" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"></textarea>
+                            <textarea  required onChange={inputEventHandler} name='extras' id="extra" type="textarea" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"></textarea>
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-black">
@@ -121,7 +121,7 @@ const AddRoom = () => {
                                     <div className="flex text-sm text-gray-600">
                                         <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                                             <span className="">Upload a file</span>
-                                            <input onChange={handleImageChange} id="file-upload" name="file-upload" type="file" className="sr-only border-l-blue-500" />
+                                            <input required onChange={handleImageChange} id="file-upload" name="file-upload" type="file" className="sr-only border-l-blue-500" />
                                         </label>
 
                                     </div>

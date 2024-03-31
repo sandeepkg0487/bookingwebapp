@@ -20,6 +20,7 @@ import HotelLogin from './Pages/HotelLogin'
 import HotelRoomView from './Pages/HotelRoomView'
 import HotelAddRoom from './Pages/HotelAddRoom'
 import DatePicker from './DatePicker'
+import HotelProtect from './AuthProtection/HotelProtect'
 
 function App() {
 
@@ -50,9 +51,11 @@ function App() {
                   <Route path="/profile" element={<Account />}></Route>
                 </Route>
 
-                <Route path="/HotelRoomView" element={<HotelRoomView />}></Route>
-                <Route path="/HotelAddRoom" element={<HotelAddRoom />}></Route>
-                
+                <Route element={<HotelProtect/>}>
+                  <Route path="/HotelRoomView" element={<HotelRoomView />}></Route>
+                  <Route path="/HotelAddRoom" element={<HotelAddRoom />}></Route>
+                </Route>
+
                 <Route path="/" element={<Home />}></Route>
                 <Route path="/date" element={<DatePicker />}></Route>
                 <Route path="/Hotel/:Rid/:hid" element={<HotelHome />}></Route>

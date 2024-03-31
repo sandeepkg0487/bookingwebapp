@@ -3,7 +3,7 @@ import AddRoom from '../assets/AddRoom'
 
 const HotelAddRoom = () => {
   return (
-    <div>HotelAddRoom
+    <div className='dark:bg-gray-800'> 
         <AddRoom/>
     </div>
   )
