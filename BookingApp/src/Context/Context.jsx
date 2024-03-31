@@ -1,20 +1,48 @@
-// DataContext.js
+
 import React, { createContext, useState, useContext } from 'react';
 
-// Step 1: Create a context
+
 const DataContext = createContext();
 
-// Step 2: Create a provider
+
 export const DataProvider = ({ children }) => {
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+
+  const today = new Date().toISOString().split('T')[0]; //set default date today
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1); // Increment the date by 1 to get tomorrow's date
+  const tomorrowString = tomorrow.toISOString().split('T')[0];
 
 
-  // You can have any other state or functions related to data management here
+
+
+  const [searchParam, setSearchParam] = useState('uganda')
+  const [count, setCount] = useState(1)
+  const [dates, setDates] = useState({
+    startDate: today,
+    endDate: tomorrowString
+  });
+
+
+  const handleDateChange = (newValue) => {
+    console.log("newValue:", newValue);
+    setDates(newValue);
+
+  }
+
+  const handleCounterClick = (e) => {
+    if (e.target.dataset.action === 'increment') {
+
+      setCount(count + 1);
+
+    } else if (e.target.dataset.action === 'decrement' && count > 1) {
+      setCount(count - 1);
+    }
+  }
+
+
 
   return (
-    <DataContext.Provider value={{ data, setData ,isLoading, setIsLoading, error, setError }}>
+    <DataContext.Provider value={{ today, tomorrowString, searchParam, setSearchParam, handleDateChange, dates, count, handleCounterClick }}>
       {children}
     </DataContext.Provider>
   );

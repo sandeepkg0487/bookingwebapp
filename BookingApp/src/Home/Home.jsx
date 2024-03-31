@@ -5,16 +5,15 @@ import useDataCollection from '../Hooks/useDataCollection'
 
 const Home = () => {
 
-  const [searchstr, setSearchstr] = useState()
+  const [searchToggle, setSearchToggle] = useState()
   const { data, handleFormSubmit, inputEventHandler } = useDataCollection()
 
-  useEffect(() => {
-    console.log('search',searchstr);
-  }, [data,searchstr])
 
-  const updateSearchData = () => {
-    console.log('click');
-    setSearchstr((prev)=>data.search)
+
+  const updateSearchData = (e) => {
+    e.preventDefault()
+    
+    setSearchToggle(!searchToggle)
   };
   return (
     <>
@@ -24,7 +23,7 @@ const Home = () => {
       />
       <div className="min-h-screen p-5  bg-gray-50">
 
-        <CardSetter searchParam = {searchstr} />
+        <CardSetter searchParam = {searchToggle} />
 
 
 

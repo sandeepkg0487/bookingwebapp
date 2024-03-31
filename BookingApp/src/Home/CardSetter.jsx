@@ -6,8 +6,8 @@ const CardSetter = ({ data }) => {
   return (
     <div className="max-w-7xl mx-auto text-center flex justify-between sm:justify-start items-center sm:px-6 lg:px-8">
       <div className="grid sm:grid-cols-3 md:grid-cols-4 grid-cols-2  gap-4">
-        {data.map(item => (
-          <HomeCard key={item.id} item={item} />
+        {data.map((item,index) => (
+          <HomeCard key={index} item={item} />
         ))}
       </div>
     </div>
@@ -16,4 +16,4 @@ const CardSetter = ({ data }) => {
 }
 
 
-export default DataFetcher(CardSetter, 'http://localhost:3001/search');
+export default DataFetcher(CardSetter, '/booknow/findRoom'); 

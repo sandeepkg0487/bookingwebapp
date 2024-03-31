@@ -82,6 +82,10 @@ const roomSchema = new Schema({
         type: String,
         required: true
     },
+    location: {
+        type: String,
+        required: true,
+    },
     roomType: {
         type: String
     },
@@ -93,7 +97,7 @@ const roomSchema = new Schema({
         required: true
     },
     capacity: {
-        type: Number,
+        type: String,
         required: true
     },
     roomStructure: [{
@@ -108,6 +112,7 @@ const roomSchema = new Schema({
             userId:String,
             name:String,
             phone:Number,
+            orderNote:String,
         }]
     }],
     extras: [

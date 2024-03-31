@@ -1,38 +1,42 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import api from './Services/api';
+import { useData } from './Context/Context';
+import AxiosBuilder from './Services/AxiosBuilder';
 
 function DataFetcher(WrappedComponent, url) {
+
   return function DataFetcher(props) {
+
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    //  console.log("props",props);
-    let param = {
-      "searchparam":"",
-      "pagenumber":1
-    }
-    if(props.searchParam){
-      param = {
-        searchparam:'atlas',
-        pagenumber:1
-      }
+
+    const { today, tomorrowString, dates, searchParam ,count } = useData()
   
-    }
-    // console.log(param);
+
+   
+      const param = {
+        searchparam: searchParam,
+        start_date: dates.startDate,
+        end_date: dates.endDate,
+        numberOfRooms:count
+      }
+
+ 
     useEffect(() => {
-      // console.log(props);
+
       const fetchData = async () => {
-        console.log("inside",props.searchParam)
+
         try {
-          const response = await axios.get(url,
+          
+          const response = await api.post(url,
+
             {
-              params: {
-                searchparam: props.searchParam,
-                pagenumber: 1
-              }
+              ...param
             }
-            );
-          // console.log(response.data);
+          );
+
           setData(response.data);
         } catch (error) {
           setError(error);
@@ -42,7 +46,7 @@ function DataFetcher(WrappedComponent, url) {
       };
 
       fetchData();
-    }, [url,props.searchParam]);
+    }, [url, props.searchParam]);
 
     if (isLoading) {
       return <div>Loading...</div>;
@@ -51,8 +55,11 @@ function DataFetcher(WrappedComponent, url) {
     if (error) {
       return <div>Error: {error.message}</div>;
     }
+    if (data.data == 'faild') {
+      return <div>somting went wrong</div>
+    }
 
-    return <WrappedComponent  data={data} />;
+    return <WrappedComponent data={data} />;
   };
 }
- export default DataFetcher;
+export default DataFetcher;

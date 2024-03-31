@@ -9,22 +9,27 @@ export const AuthContextprovider = ({ children }) => {
 
     const navigate = useNavigate()
     // const [ isAuth,setIsAuth ] = useState(false);
-    const [cookies, setCookies, removeCookie] = useCookies()
+    const [cookies, setCookies, removeCookie] = useCookies(['accessToken','refreshToken','isAuth','role'])
+   
 
-    console.log('to check weather working');
+  
 
 
     // login fn
     const login = async (email, password) => {
-console.log("email, password",email, password)
+
         try {
             const response = await api.post('/login', {
                 email: email,
                 password: password
             })
 
-            setCookies('token', response.data.token);
+            setCookies('accessToken', response.data.accessToken);
+            setCookies('refreshToken', response.data.refreshToken);
             setCookies('isAuth', true);
+            setCookies('role', "user");
+            sessionStorage.setItem('username', response.data.email);
+            
 
             return true
 
@@ -38,7 +43,7 @@ console.log("email, password",email, password)
 
     // signup function
     const signup = async (firstname, lastname, email, password,phone) => {
-        console.log("data receive from signpu",firstname, lastname.email, password);
+    
         try {
             const response = await api.post('/signup', {
                 firstname: firstname,
@@ -48,8 +53,11 @@ console.log("email, password",email, password)
                 phone:phone,
             })
             console.log("response", response.data);
-            setCookies('token', response.data.token);
+            setCookies('accessToken', response.data.accessToken);
+            setCookies('refreshToken', response.data.refreshToken);
             setCookies('isAuth', true);
+            setCookies('role', "user");
+            sessionStorage.setItem('username', response.data.email);
 
             return true
 
@@ -62,8 +70,12 @@ console.log("email, password",email, password)
     // logutfunction
 
     const logout = () => {
-        removeCookie('token')
-        navigate('/login')
+        removeCookie('accessToken')
+        removeCookie('refreshToken')
+        removeCookie('isAuth')
+        removeCookie('role');
+        // removeCookie('')
+        // navigate('/login')
     }
 
     const value = useMemo(
@@ -72,6 +84,7 @@ console.log("email, password",email, password)
             login,
             logout,
             signup,
+            
 
         }), [cookies]
     )
