@@ -31,6 +31,9 @@ app.post('/signup', registercontroll)
 app.use('/search',Search)
 // app.get('/search',getDocuments)
 // app.post('/getdata',authMiddleware,servedata)
+app.get('/test',(req,res,next)=>{
+res.send('Route Test ok ')
+})
 
 
 
